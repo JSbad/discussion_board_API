@@ -9,48 +9,60 @@ app.use(
   })
 );
 
-app.get("/express_api", async (req, res) => {
+app.get("api/posts/:postId/comments", async (req, res) => {
   const { status, data } = await getComments(req);
   res.status(status);
   if (data) res.json(data);
   else res.end();
 });
 
-app.post("/express_api", async (req, res) => {
+app.get("api/posts", async (req, res) => {
+  const { status, data } = await getPosts(req);
+  res.status(status);
+  if (data) res.json(data);
+  else res.end();
+});
+
+app.get("api/posts/:postId", async (req, res) => {
+  const { status, data } = await getPosts(req);
+  res.status(status);
+  if (data) res.json(data);
+  else res.end();
+});
+
+
+app.post("api/comments", async (req, res) => {
   const { status, data } = await postComments(req);
   res.status(status);
   if (data) res.json(data);
   else res.end();
 });
 
-app.put("/express_api", async (req, res) => {
-  res.status(405);
-  res.end();
-});
-
-app.delete("/express_api", async (req, res) => {
-  res.status(405);
-  res.end();
+app.post("api/posts", async (req, res) => {
+  const { status, data } = await postPosts(req);
+  res.status(status);
+  if (data) res.json(data);
+  else res.end();
 });
 
 async function getComments(req) {
   let status = 500,
     data = null;
   try {
-    const id = req.query.id;
+    const postId = req.query.postId;
     if (
-      id &&
-      id.length > 0 &&
-      id.length <= 36 &&
-      uuidValidate(id)
+      postId &&
+      postId.length > 0 &&
+      postId.length <= 36 &&
+      uuidValidate(postId)
     ) {
-      const sql = "SELECT name, comment FROM Comments WHERE id=?";
-      const rows = await db.query(sql, [id]);
+      const sql = "SELECT author, comment FROM Comments WHERE postId=? ORDER BY date_created";
+      const rows = await db.query(sql, [postId]);
 
       if (rows) {
         status = 200;
         data = {
-          id: id,
+          postId: postId,
           comments: rows,
         };
       } else {
@@ -68,32 +80,28 @@ async function getComments(req) {
   };
 }
 
-async function postComments(req) {
+async function getPosts(req) {
   let status = 500,
     data = null;
   try {
-    const id = req.body.id;
-    const name = req.body.name;
-    const comment = req.body.comment;
+    const postId = req.query.postId;
     if (
-      id &&
-      name &&
-      comment &&
-      id.length > 0 &&
-      id.length <= 36 &&
-      uuidValidate(id) &&
-      name.length > 0 &&
-      name.length <= 64 &&
-      comment.length > 0
+      postId &&
+      postId.length > 0 &&
+      postId.length <= 36 &&
+      uuidValidate(postId)
     ) {
-      const sql =
-        "INSERT INTO Comments(id, name, comment) " + "VALUES(?, ?, ?)";
-      const result = await db.query(sql, [id, name, comment]);
-      if (result.affectedRows) {
-        status = 201;
+      const sql = "SELECT author, title, content, counter WHERE postId=?";
+      const rows = await db.query(sql, [postId]);
+
+      if (rows) {
+        status = 200;
         data = {
-          id: result.insertId,
+          postId: postId,
+          posts: rows,
         };
+      } else {
+        status = 204;
       }
     } else {
       status = 400;
@@ -103,7 +111,49 @@ async function postComments(req) {
   }
   return {
     status,
-    data,
+    data
+  };
+}
+
+
+async function postComments(req) {
+  let status = 500,
+    data = null;
+  try {
+    const postId = req.body.postId;
+    const author = req.body.author;
+    const comment = req.body.comment;
+    if (
+      postId &&
+      author &&
+      comment &&
+      postId.length > 0 &&
+      postId.length <= 36 &&
+      uuidValidate(postId) &&
+      author.length > 0 &&
+      author.length <= 64 &&
+      comment.length > 0
+    ) {
+      const sql =
+        "INSERT INTO Comments(postId, author, comment) " + "VALUES(?, ?, ?)";
+      const result = await db.query(sql, [postId, author, comment]);
+      if (result.affectedRows) {
+        status = 201;
+        data = {
+          postId,
+          author,
+          comment
+        }
+      }
+    } else {
+      status = 400;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+  return {
+    status,
+    JSON.stringify(data)
   };
 }
 
