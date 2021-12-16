@@ -6,7 +6,7 @@ const public_properties = [
   "author",
   "image",
   "content",
-  "date",
+  "dateCreated",
 ];
 const private_properties = [];
 const properties = public_properties.concat(private_properties);
@@ -40,7 +40,7 @@ function create(value, callback) {
 module.exports = {
   getAll,
   get,
-  post,
+  create,
   public_properties,
   private_properties,
   properties,
