@@ -1,10 +1,14 @@
 {
   "name": "discussion_board_api",
   "version": "1.0.0",
-  "description": "",
+  "description": "API for the discussion board.",
   "main": "App.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon App.js",
+    "tables-create": "node ./database/queries/tables_create.js",
+    "tables-delete": "node ./database/queries/tables_delete.js",
+    "tables-populate": "node ./database/queries/tables_populate.js",
+    "tables-empty": "node ./database/queries/tables_empty.js"
   },
   "keywords": [
     "API",
@@ -13,5 +17,12 @@
     "Node.js"
   ],
   "author": "JSbad",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.15",
+    "uuid": "^8.3.2"
+  }
 }

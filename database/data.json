@@ -1,0 +1,56 @@
+{
+    "posts": [
+      {
+        "postId": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a",
+        "title": "How to code?",
+        "author": "John Doe",
+        "image": "images/image1.jpg",
+        "content": "Coding is hard."
+      },
+      {
+        "postId": "cb692490-5dfc-11ec-989f-01da64ee160a",
+        "title": "How to code 2?",
+        "author": "Jane Doe",
+        "image": "images/image2.jpg",
+        "content": "Coding is harder."
+      }
+    ],
+    "comments": [
+      {
+        "commentId": "cce38f90-5dfc-11ec-989f-01da64ee160a",
+        "author": "User1",
+        "content": "That's a really nice article!",
+        "postId": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a"
+      },
+      {
+        "commentId": "cd3fe060-5dfc-11ec-989f-01da64ee160a",
+        "author": "User1",
+        "content": "That's a really nice article!",
+        "postId": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a"
+      },
+      {
+        "commentId": "f27972b0-5dfc-11ec-989f-01da64ee160a",
+        "author": "User1",
+        "content": "That's a really nice article!",
+        "postId": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a"
+      },
+      {
+        "commentId": "ffceafc0-5dfc-11ec-989f-01da64ee160a",
+        "author": "User1",
+        "content": "That's a really nice article!",
+        "postId": "cb692490-5dfc-11ec-989f-01da64ee160a"
+      },
+      {
+        "commentId": "067c20f0-5dfd-11ec-989f-01da64ee160a",
+        "author": "User1",
+        "content": "That's a really nice article!",
+        "postId": "cb692490-5dfc-11ec-989f-01da64ee160a"
+      },
+      {
+        "commentId": "0a88f6a0-5dfd-11ec-989f-01da64ee160a",
+        "author": "User1",
+        "content": "That's a really nice article!",
+        "postId": "cb692490-5dfc-11ec-989f-01da64ee160a"
+      }
+    ]
+  }
