@@ -26,4 +26,10 @@ comments.get('/:id', (req, res) => {
     });
 });
 
+comments.post(':/id', (req, res) =>{
+    const _id = req.body.id;
+    const commentId = req.body.commentId;
+    const author = req.body.author;
+    const content = req.body.content;
+})
 module.exports = comments;

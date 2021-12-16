@@ -16,6 +16,13 @@ function get(property, value, callback){
     database.selectWhere('comments', public_properties, property, value, (results) => {
         return callback(results);
     });
+};
+
+//Post comment
+function post(property, value, callback) {
+    database.insertInto('comments', public_properties, value, (results) => {
+        return callback(results);
+    })
 }
 
 module.exports = {getAll, get, public_properties, private_properties, properties};

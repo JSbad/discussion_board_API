@@ -18,7 +18,8 @@ connection.connect((err) => {
 
 //Handle SELECT
 function select(tableName, properties, callback) {
-    connection.query('SELECT ' + properties.toString() + ' FROM ??', tableName, function (error, results) {
+    const queryBuilder = 'SELECT ' + properties.toString() + ' FROM ??';
+    connection.query(queryBuilder, tableName, function (error, results) {
         if (error) {
             throw error;
         } else {
@@ -29,7 +30,8 @@ function select(tableName, properties, callback) {
 
 //Handle SELECT WHERE
 function selectWhere(tableName, properties, property, value, callback) {
-    connection.query('SELECT ' + properties.toString() + ' FROM ?? WHERE ?? = ?', [tableName, property, value], function (error, results) {
+    const queryBuilder = 'SELECT ' + properties.toString() + ' FROM ?? WHERE ?? = ?';
+    connection.query(queryBuilder, [tableName, property, value], function (error, results) {
         if (error) {
             throw error;
         } else {
@@ -40,7 +42,7 @@ function selectWhere(tableName, properties, property, value, callback) {
 
 //Handle INSERT INTO
 function insertInto(tableName, properties, values, callback) {
-    var queryBuilder = 'INSERT INTO ?? (' + properties.toString() + ') VALUES ( ? )';
+    const queryBuilder = 'INSERT INTO ?? (' + properties.toString() + ') VALUES ( ? )';
     connection.query(queryBuilder, [tableName, values], function (error, results) {
         if (error) {
             throw error;
@@ -52,7 +54,7 @@ function insertInto(tableName, properties, values, callback) {
 
 //Handle CREATE TABLE
 function createTable(tableName, properties, callback) {
-    var queryBuilder = 'CREATE TABLE ?? ( `id` INT NOT NULL AUTO_INCREMENT';
+    const queryBuilder = 'CREATE TABLE ?? ( `id` INT NOT NULL AUTO_INCREMENT';
     properties.map(v => queryBuilder += ", " + v + " VARCHAR(256) NOT NULL");
     queryBuilder += ', PRIMARY KEY (`id`)) ENGINE = InnoDB;';
     connection.query(queryBuilder, tableName, function (error, results) {
