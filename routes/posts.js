@@ -1,77 +1,91 @@
 const posts = require("express").Router();
 const { v1: uuidv1 } = require("uuid");
 const response = require("../models/response.js");
-const post = require("../models/post.js");
-const comment = require("../models/comment.js");
-const res = require("express/lib/response");
+const Post = require("../models/post.js");
+const Comment = require("../models/comment.js");
 
 //Handle /posts
-posts.get("/", (req, res) => {
-  post.getAll((results) => {
-    if (results.length != 0)
-      res.status(200).json(response.prepare("OK", results));
-    else res.status(404).json(response.prepare("ERROR", "Not Found"));
-  });
+posts.get("/", async (req, res) => {
+  const [results, error] = await Post.getAll();
+
+  if (results.length != 0 && error.length == 0)
+    res.status(200).json(response.prepare(200, results, error));
+  else res.status(404).json(response.prepare(404, results, error));
 });
 
 //Handle get /posts/example_id
-posts.get("/:id", (req, res) => {
-  const _id = req.params.id;
+posts.get("/:id", async (req, res) => {
+  const postId = req.params.id;
 
-  post.get("postId", _id, (results) => {
-    if (results.length != 0)
-      res.status(200).json(response.prepare("OK", results));
-    else res.status(404).json(response.prepare("ERROR", "Not Found"));
-  });
+  const [results, error] = await Post.getById(postId);
+  if (results.length != 0 && error.length == 0)
+    res.status(200).json(response.prepare(200, results, error));
+  else res.status(404).json(response.prepare(404, results, error));
 });
 
 //Handle /posts/example_id/comments
-posts.get("/:id/comments", (req, res) => {
-  const _id = req.params.id;
+posts.get("/:id/comments", async (req, res) => {
+  const postId = req.params.id;
 
-  comment.get("postId", _id, (results) => {
-    if (results.length != 0)
-      res.status(200).json(response.prepare("OK", results));
-    else res.status(404).json(response.prepare("ERROR", "Not Found"));
-  });
+  const [results, error] = await Comment.getByForeignId(postId);
+  if (results.length != 0 && error.length == 0)
+    res.status(200).json(response.prepare(200, results, error));
+  else res.status(404).json(response.prepare(404, results, error));
 });
 
 //Handle creating a post
-posts.post("/", (req, res) => {
-  const _id = uuidv1();
-  const author = req.body.author;
-  const title = req.body.title;
-  const content = req.body.content;
-  const image = req.body.image;
-  const date = req.body.date;
-  if (_id && author && title && content && date) {
-    post.create([_id, title, author, image, content, date], (results) => {
-      if (results.affectedRows)
-        res.status(201).json(response.prepare("OK", results));
-      else
-        res.status(400).json(response.prepare("ERROR", "Couldnt create post"));
-    });
+posts.post("/", async (req, res) => {
+  const postId = uuidv1();
+  const dateCreated = new Date().toLocaleString('en-GB');
+  const dateUpdated = dateCreated;
+  let bodyValues = [];
+  let invalid = false;
+
+  Post.fillable_properties.map(function (v) {
+    if (req.body[v] === null || req.body[v] === undefined)
+      invalid = true;
+    bodyValues.push(req.body[v]);
+  });
+
+  bodyValues = [postId, ...bodyValues, dateUpdated, dateCreated];
+
+  if (!invalid) {
+    const [results, error] = await Post.create(bodyValues);
+    if (error.length == 0 && results.affectedRows == 1)
+      res.status(201).json(response.prepare(201, results, error));
+    else
+      res.status(400).json(response.prepare(400, results, error));
   } else {
-    res.status(400).json(response.prepare("ERROR", "Couldnt create post"));
+    res.status(400).json(response.prepare(400, [], [{ "message": "Missing data" }]));
   }
 });
 
 //Handle creating a comment
-posts.post("/:id/comments", (req, res) => {
-  const _id = req.body.id;
+posts.post("/:id/comments", async (req, res) => {
+  const postId = req.params.id;
   const commentId = uuidv1();
-  const author = req.body.author;
-  const content = req.body.content;
-  const date = req.body.date;
-  if (_id && author && content && date) {
-    comment.create([commentId, author, content, date, _id], (results) => {
-      if (results.affectedRows)
-        res.status(201).json(response.prepare("OK", results));
-      else
-        res.status(400).json(response.prepare("ERROR", "Couldnt create comment"));
-    });
+  const dateCreated = new Date().toLocaleString('en-GB');
+  const dateUpdated = dateCreated;
+  let bodyValues = [];
+  let invalid = false;
+
+  Comment.fillable_properties.map(function (v) {
+    if (req.body[v] === null || req.body[v] === undefined)
+      invalid = true;
+    bodyValues.push(req.body[v]);
+  });
+
+  bodyValues = [commentId, ...bodyValues, postId, dateUpdated, dateCreated];
+
+  if (!invalid) {
+    const [results, error] = await Comment.create(bodyValues);
+    if (error.length == 0 && results.affectedRows == 1)
+      res.status(201).json(response.prepare(201, results, error));
+    else
+      res.status(400).json(response.prepare(400, results, error));
+
   } else {
-    res.status(400).json(response.prepare("ERROR", "Couldnt create comment"));
+    res.status(400).json(response.prepare(400, [], [{ "message": "Missing data" }]));
   }
 });
 

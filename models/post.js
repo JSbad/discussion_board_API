@@ -1,47 +1,20 @@
-const database = require("../database/mysql-db.js");
+const Model = require("./model.js");
 
-const public_properties = [
-  "postId",
-  "title",
-  "author",
-  "image",
-  "content",
-  "dateCreated",
-];
-const private_properties = [];
-const properties = public_properties.concat(private_properties);
+class Post extends Model {
+  static tableName = "posts";
+  static identifier = "post_id";
+  static foreignIdentifier = "user_id";
 
-//Return all posts
-function getAll(callback) {
-  database.select("posts", public_properties, (results) => {
-    return callback(results);
-  });
+  static fillable_properties = ["title", "author", "image", "content"];
+  static public_properties = [
+    this.identifier,
+    ...this.fillable_properties,
+    ...this.public_properties,
+  ];
+
+  constructor() {
+    super();
+  }
 }
 
-//Return posts where property is equal to value
-function get(property, value, callback) {
-  database.selectWhere(
-    "posts",
-    public_properties,
-    property,
-    value,
-    (results) => {
-      return callback(results);
-    }
-  );
-}
-
-//Post post
-function create(value, callback) {
-  database.insertInto("posts", public_properties, value, (results) => {
-    return callback(results);
-  });
-}
-module.exports = {
-  getAll,
-  get,
-  create,
-  public_properties,
-  private_properties,
-  properties,
-};
+module.exports = Post;

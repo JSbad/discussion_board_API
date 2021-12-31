@@ -1,35 +1,24 @@
 const comments = require('express').Router();
-
 const response = require('../models/response.js');
-const post = require('../models/post.js');
-const comment = require('../models/comment.js');
+const Comment = require('../models/comment.js');
 
 //Handle /comments
-comments.get('/', (req, res) => {
-    comment.getAll((results) => {
-        if(results.length != 0)
-        res.status(200).json(response.prepare('OK', results));
-        else
-        res.status(404).json(response.prepare('ERROR', 'Not Found'));
-    });
+comments.get('/', async (req, res) => {
+    const [results, error] = await Comment.getAll();
+
+    if (results.length != 0 && error.length == 0)
+        res.status(200).json(response.prepare(200, results, error));
+    else res.status(404).json(response.prepare(404, results, error));
 });
 
 //Handle /comments/example_id
-comments.get('/:id', (req, res) => {
-    const _id = req.params.id;
+comments.get('/:id', async (req, res) => {
+    const commentId = req.params.id;
 
-    comment.get('commentId', _id, (results) => {
-        if(results.length != 0)
-        res.status(200).json(response.prepare('OK', results));
-        else
-        res.status(404).json(response.prepare('ERROR', 'Not Found'));
-    });
+    const [results, error] = await Comment.getById(commentId);
+    if (results.length != 0 && error.length == 0)
+        res.status(200).json(response.prepare(200, results, error));
+    else res.status(404).json(response.prepare(404, results, error));
 });
 
-comments.post(':/id', (req, res) =>{
-    const _id = req.body.id;
-    const commentId = req.body.commentId;
-    const author = req.body.author;
-    const content = req.body.content;
-})
 module.exports = comments;

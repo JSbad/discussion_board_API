@@ -10,12 +10,12 @@ routes.use('/posts', posts);
 
 //Handle /
 routes.get("/", (req, res) => {
-    res.status(200).json(response.prepare('OK', 'Hello world'));
+    res.status(200).json(response.prepare(200, [], []));
 });
 
 //Handle all other paths
 routes.get('*', (req, res) => {
-    res.status(404).json(response.prepare('ERROR', 'Not found'));
+    res.status(404).json(response.prepare(404, [], [{ "message": "Endpoint not found" }]));
 });
 
 module.exports = routes;
