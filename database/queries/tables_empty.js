@@ -1,6 +1,12 @@
 const database = require('../mysql-db.js');
 
-database.deleteFrom("posts", function(){ console.log("Posts emptied")});
-database.deleteFrom("comments", function(){ console.log("Comments emptied")});
+async function execute() {
+    await database.deleteFrom("posts");
+    console.log("Posts emptied");
+    await database.deleteFrom("comments");
+    console.log("Comments emptied");
 
-database.closeConnection();
+    database.closeConnection();
+};
+
+execute();

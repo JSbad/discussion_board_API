@@ -1,8 +1,18 @@
 const database = require('../mysql-db.js');
-const post = require('../../models/post.js');
-const comment = require('../../models/comment.js');
+const Post = require('../../models/post.js');
+const Comment = require('../../models/comment.js');
+const User = require('../models/user.js');
 
-database.createTable("posts", post.properties,function(){ console.log("Posts created")});
-database.createTable("comments", comment.properties, function(){ console.log("Comments created")});
+async function execute(){
+    await database.createTable("posts", Post.public_properties);
+    console.log("Posts created");
+    await database.createTable("comments", Comment.public_properties);
+    console.log("Comments created");
+    await database.createTable("users", User.public_properties);
+    console.log("Users created");
+    
+    database.closeConnection();
+};
 
-database.closeConnection();
+execute();
+

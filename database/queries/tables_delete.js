@@ -1,6 +1,12 @@
 const database = require('../mysql-db.js');
 
-database.dropTable("posts", function(){ console.log("Posts deleted")});
-database.dropTable("comments", function(){ console.log("Comments created")});
+async function execute() {
+    await database.dropTable("posts");
+    console.log("Posts deleted");
+    await database.dropTable("comments");
+    console.log("Comments deleted");
 
-database.closeConnection();
+    database.closeConnection();
+};
+
+execute();

@@ -1,56 +1,72 @@
 {
-    "posts": [
-      {
-        "postId": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a",
-        "title": "How to code?",
-        "author": "John Doe",
-        "image": "images/image1.jpg",
-        "content": "Coding is hard."
-      },
-      {
-        "postId": "cb692490-5dfc-11ec-989f-01da64ee160a",
-        "title": "How to code 2?",
-        "author": "Jane Doe",
-        "image": "images/image2.jpg",
-        "content": "Coding is harder."
-      }
-    ],
-    "comments": [
-      {
-        "commentId": "cce38f90-5dfc-11ec-989f-01da64ee160a",
-        "author": "User1",
-        "content": "That's a really nice article!",
-        "postId": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a"
-      },
-      {
-        "commentId": "cd3fe060-5dfc-11ec-989f-01da64ee160a",
-        "author": "User1",
-        "content": "That's a really nice article!",
-        "postId": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a"
-      },
-      {
-        "commentId": "f27972b0-5dfc-11ec-989f-01da64ee160a",
-        "author": "User1",
-        "content": "That's a really nice article!",
-        "postId": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a"
-      },
-      {
-        "commentId": "ffceafc0-5dfc-11ec-989f-01da64ee160a",
-        "author": "User1",
-        "content": "That's a really nice article!",
-        "postId": "cb692490-5dfc-11ec-989f-01da64ee160a"
-      },
-      {
-        "commentId": "067c20f0-5dfd-11ec-989f-01da64ee160a",
-        "author": "User1",
-        "content": "That's a really nice article!",
-        "postId": "cb692490-5dfc-11ec-989f-01da64ee160a"
-      },
-      {
-        "commentId": "0a88f6a0-5dfd-11ec-989f-01da64ee160a",
-        "author": "User1",
-        "content": "That's a really nice article!",
-        "postId": "cb692490-5dfc-11ec-989f-01da64ee160a"
-      }
-    ]
-  }
+  "posts": [
+    {
+      "post_id": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a",
+      "title": "How to code?",
+      "author": "John Doe",
+      "image": "images/image1.jpg",
+      "content": "Coding is hard.",
+      "date_updated": "15/12/2021, 14:26:43",
+      "date_created": "15/12/2021, 14:26:43"
+    },
+    {
+      "post_id": "cb692490-5dfc-11ec-989f-01da64ee160a",
+      "title": "How to code 2?",
+      "author": "Jane Doe",
+      "image": "images/image2.jpg",
+      "content": "Coding is harder.",
+      "date_updated": "15/12/2021, 17:22:50",
+      "date_created": "15/12/2021, 17:22:50"
+    }
+  ],
+  "comments": [
+    {
+      "comment_id": "cce38f90-5dfc-11ec-989f-01da64ee160a",
+      "author": "User1",
+      "content": "That's a really nice article!",
+      "post_id": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a",
+      "date_updated": "14/12/2021, 14:28:15",
+      "date_created": "14/12/2021, 14:28:15"
+    },
+    {
+      "comment_id": "cd3fe060-5dfc-11ec-989f-01da64ee160a",
+      "author": "User1",
+      "content": "That's a really nice article!",
+      "post_id": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a",
+      "date_updated": "15/12/2021,, 09:12:10",
+      "date_created": "15/12/2021,, 09:12:10"
+    },
+    {
+      "comment_id": "f27972b0-5dfc-11ec-989f-01da64ee160a",
+      "author": "User1",
+      "content": "That's a really nice article!",
+      "post_id": "ca4e3eb0-5dfc-11ec-989f-01da64ee160a",
+      "date_updated": "17/12/2021, 08:45:16",
+      "date_created": "17/12/2021, 08:45:16"
+    },
+    {
+      "comment_id": "ffceafc0-5dfc-11ec-989f-01da64ee160a",
+      "author": "User1",
+      "content": "That's a really nice article!",
+      "post_id": "cb692490-5dfc-11ec-989f-01da64ee160a",
+      "date_updated": "17/12/2021, 08:56:42",
+      "date_created": "17/12/2021, 08:56:42"
+    },
+    {
+      "comment_id": "067c20f0-5dfd-11ec-989f-01da64ee160a",
+      "author": "User1",
+      "content": "That's a really nice article!",
+      "post_id": "cb692490-5dfc-11ec-989f-01da64ee160a",
+      "date_updated": "17/12/2021, 09:19:48",
+      "date_created": "17/12/2021, 09:19:48"
+    },
+    {
+      "comment_id": "0a88f6a0-5dfd-11ec-989f-01da64ee160a",
+      "author": "User1",
+      "content": "That's a really nice article!",
+      "post_id": "cb692490-5dfc-11ec-989f-01da64ee160a",
+      "date_updated": "17/12/2021, 10:02:33",
+      "date_created": "17/12/2021, 10:02:33"
+    }
+  ]
+}

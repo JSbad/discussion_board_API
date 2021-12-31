@@ -1,101 +1,133 @@
-const mysql = require('mysql2');
+const mysql = require("mysql2");
 //Access the .env file for database information
-require('dotenv').config()
+require("dotenv").config();
 
-const connection = mysql.createConnection({
-    host: process.env.DATABASE_HOST,
-    port: process.env.DATABASE_PORT,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME
+const pool = mysql.createPool({
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT,
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
 });
 
-connection.connect((err) => {
-    if (err) {
-        throw err;
-    }
-});
+const promisePool = pool.promise();
 
 //Handle SELECT
-function select(tableName, properties, callback) {
-    const queryBuilder = 'SELECT ' + properties.toString() + ' FROM ??';
-    connection.query(queryBuilder, tableName, function (error, results) {
-        if (error) {
-            throw error;
-        } else {
-            return callback(convertToJSON(results));
-        }
-    });
+async function select(tableName, properties) {
+  const queryBuilder = "SELECT " + properties.toString() + " FROM ??";
+  var results = [];
+  var error = [];
+
+  try {
+    const [rows, fields] = await promisePool.query(queryBuilder, tableName);
+    results = rows;
+  } catch (err) {
+    error = [err];
+  }
+
+  return [results, error];
 }
 
 //Handle SELECT WHERE
-function selectWhere(tableName, properties, property, value, callback) {
-    const queryBuilder = 'SELECT ' + properties.toString() + ' FROM ?? WHERE ?? = ?';
-    connection.query(queryBuilder, [tableName, property, value], function (error, results) {
-        if (error) {
-            throw error;
-        } else {
-            return callback(convertToJSON(results));
-        }
-    });
+async function selectWhere(tableName, properties, property, value) {
+  const queryBuilder =
+    "SELECT " + properties.toString() + " FROM ?? WHERE ?? = ?";
+  var results = [];
+  var error = [];
+
+  try {
+    const [rows, fields] = await promisePool.query(queryBuilder, [
+      tableName,
+      property,
+      value,
+    ]);
+    results = rows;
+  } catch (err) {
+    error = [err];
+  }
+
+  return [results, error];
 }
 
 //Handle INSERT INTO
-function insertInto(tableName, properties, values, callback) {
-    const queryBuilder = 'INSERT INTO ?? (' + properties.toString() + ') VALUES ( ? )';
-    connection.query(queryBuilder, [tableName, values], function (error, results) {
-        if (error) {
-            throw error;
-        } else {
-            return callback();
-        }
-    });
+async function insertInto(tableName, properties, values) {
+  const queryBuilder =
+    "INSERT INTO ?? (" + properties.toString() + ") VALUES ( ? )";
+  var results = [];
+  var error = [];
+
+  try {
+    const [rows, fields] = await promisePool.query(queryBuilder, [
+      tableName,
+      values,
+    ]);
+    results = rows;
+  } catch (err) {
+    error = [err];
+  }
+
+  return [results, error];
 }
 
 //Handle CREATE TABLE
-function createTable(tableName, properties, callback) {
-    const queryBuilder = 'CREATE TABLE ?? ( `id` INT NOT NULL AUTO_INCREMENT';
-    properties.map(v => queryBuilder += ", " + v + " VARCHAR(256) NOT NULL");
-    queryBuilder += ', PRIMARY KEY (`id`)) ENGINE = InnoDB;';
-    connection.query(queryBuilder, tableName, function (error, results) {
-        if (error) {
-            throw error;
-        } else {
-            return callback();
-        }
-    });
+async function createTable(tableName, properties) {
+  var queryBuilder = "CREATE TABLE ?? ( `id` INT NOT NULL AUTO_INCREMENT";
+  properties.map((v) => (queryBuilder += ", " + v + " VARCHAR(256) NOT NULL"));
+  queryBuilder += ", PRIMARY KEY (`id`)) ENGINE = InnoDB;";
+  var results = [];
+  var error = [];
+
+  try {
+    const [rows, fields] = await promisePool.query(queryBuilder, tableName);
+    results = rows;
+  } catch (err) {
+    error = [err];
+  }
+
+  return [results, error];
 }
 
 //Handle DELETE FROM
-function deleteFrom(tableName, callback) {
-    connection.query('DELETE FROM ??', tableName, function (error, results) {
-        if (error) {
-            throw error;
-        } else {
-            return callback();
-        }
-    });
+async function deleteFrom(tableName) {
+  var results = [];
+  var error = [];
+
+  try {
+    const [rows, fields] = await promisePool.query("DELETE FROM ??", tableName);
+    results = rows;
+  } catch (err) {
+    error = [err];
+  }
+
+  return [results, error];
 }
 
 //Handle DROP TABLE
-function dropTable(tableName, callback) {
-    connection.query('DROP TABLE ??', tableName, function (error, results) {
-        if (error) {
-            throw error;
-        } else {
-            return callback();
-        }
-    });
-}
+async function dropTable(tableName) {
+  var results = [];
+  var error = [];
 
-//Handle RowDataPacket conversion to JSON
-function convertToJSON(data) {
-    return data.map(v => Object.assign({}, v));
+  try {
+    const [rows, fields] = await promisePool.query("DROP TABLE ??", tableName);
+    results = rows;
+  } catch (err) {
+    error = [err];
+  }
+
+  return [results, error];
 }
 
 //Handle closing the connection
 function closeConnection() {
-    connection.end();
+  promisePool.end();
 }
 
-module.exports = { selectWhere, createTable, closeConnection, dropTable, select, deleteFrom, insertInto }
+module.exports = {
+  selectWhere,
+  createTable,
+  closeConnection,
+  dropTable,
+  select,
+  deleteFrom,
+  insertInto,
+};
