@@ -5,17 +5,19 @@ const cookieParser = require("cookie-parser");
 const Post = require("../models/post.js");
 const Comment = require("../models/comment.js");
 const User = require("../models/user.js");
+const cookieHandler = require("../helpers/cookieHandler.js");
 
 users.use(cookieParser());
 
 //Handle creating a user
 users.post("/", async (req, res) => {
-    const userId= uuidv1();
     const dateCreated = new Date().toLocaleString('en-GB');
     const dateUpdated = dateCreated;
+    const userId = cookieHandler.getCookie(res, "userId");
     let bodyValues = [];
     let invalid = false;
   
+    
     User.fillable_properties.map(function (v) {
       if (req.body[v] === null || req.body[v] === undefined)
         invalid = true;
@@ -24,16 +26,11 @@ users.post("/", async (req, res) => {
   
     bodyValues = [userId, ...bodyValues, dateUpdated, dateCreated];
   
-    if (!invalid) {
+    if (!userId) {
+      cookieHandler.setCookie(res, "userId", uuidv1());
       const [results, error] = await User.create(bodyValues);
       if (error.length == 0 && results.affectedRows == 1) {
-        res.status(201).json(response.prepare(201, results, error));
-        res.cookie('userId', userId, {
-          expires: new Date('01 01 2100'),
-          secure: true,
-          httpOnly: true,
-          sameSite: 'strict'
-        });
+        res.status(201).json(response.prepare(201, results, error));  
       }
       else
         res.status(400).json(response.prepare(400, results, error));
@@ -58,3 +55,5 @@ users.get("/users/:id/posts", async(req, res) => {
     res.status(200).json(response.prepare(200, results, error));
   else res.status(404).json(response.prepare(404, results, error));
 });
+
+module.exports = users;

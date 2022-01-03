@@ -1,7 +1,7 @@
 const database = require('../mysql-db.js');
 const Post = require('../../models/post.js');
 const Comment = require('../../models/comment.js');
-const User = require('../models/user.js');
+const User = require('../../models/user.js');
 
 async function execute(){
     await database.createTable("posts", Post.public_properties);

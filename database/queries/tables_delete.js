@@ -5,7 +5,8 @@ async function execute() {
     console.log("Posts deleted");
     await database.dropTable("comments");
     console.log("Comments deleted");
-
+    await database.dropTable("users");
+    console.log("Users deleted");
     database.closeConnection();
 };
 

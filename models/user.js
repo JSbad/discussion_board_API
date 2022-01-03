@@ -8,7 +8,6 @@ class User extends Model {
   static public_properties = [
     this.identifier,
     ...this.fillable_properties,
-    this.foreignIdentifier,
     ...this.public_properties,
   ];
   constructor() {

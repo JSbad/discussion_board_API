@@ -2,7 +2,7 @@ const database = require("../mysql-db.js");
 const static_database = require("../json-db.js");
 const Post = require("../../models/post.js");
 const Comment = require("../../models/comment.js");
-const User = requre("../../models/user.js");
+const User = require("../../models/user.js");
 
 async function execute() {
   const posts = await static_database.getAll("posts");
