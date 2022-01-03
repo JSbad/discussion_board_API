@@ -1,4 +1,5 @@
 const posts = require("express").Router();
+const fileUpload = require('express-fileupload');
 const { v1: uuidv1 } = require("uuid");
 const response = require("../models/response.js");
 const Post = require("../models/post.js");
@@ -40,6 +41,7 @@ posts.post("/", async (req, res) => {
   const dateUpdated = dateCreated;
   let bodyValues = [];
   let invalid = false;
+  let picUpload;
 
   Post.fillable_properties.map(function (v) {
     if (req.body[v] === null || req.body[v] === undefined)
