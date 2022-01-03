@@ -5,6 +5,8 @@ const response = require("../models/response.js");
 const Post = require("../models/post.js");
 const Comment = require("../models/comment.js");
 
+posts.use(fileUpload());
+
 //Handle /posts
 posts.get("/", async (req, res) => {
   const [results, error] = await Post.getAll();
