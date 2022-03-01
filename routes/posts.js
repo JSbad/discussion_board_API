@@ -4,6 +4,7 @@ const { v1: uuidv1 } = require("uuid");
 const response = require("../models/response.js");
 const Post = require("../models/post.js");
 const Comment = require("../models/comment.js");
+const cookieHandler = require("../helpers/cookieHandler.js");
 
 posts.use(fileUpload());
 
@@ -39,6 +40,7 @@ posts.get("/:id/comments", async (req, res) => {
 //Handle creating a post
 posts.post("/", async (req, res) => {
   const postId = uuidv1();
+  const userId = cookieHandler.getCookie(res, "userId");
   const dateCreated = new Date().toLocaleString('en-GB');
   const dateUpdated = dateCreated;
   let bodyValues = [];
@@ -51,7 +53,7 @@ posts.post("/", async (req, res) => {
     bodyValues.push(req.body[v]);
   });
 
-  bodyValues = [postId, ...bodyValues, dateUpdated, dateCreated];
+  bodyValues = [postId, ...bodyValues, userId, dateUpdated, dateCreated];
 
   if (!invalid) {
     const [results, error] = await Post.create(bodyValues);

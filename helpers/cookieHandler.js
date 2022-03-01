@@ -1,8 +1,6 @@
 const { v1: uuidv1 } = require("uuid");
 const cookieParser = require("cookie-parser");
 
-cookie - handler.use(cookieParse());
-
 class cookieHandler {
   static setCookie(res, key, value) {
     res.cookie(key, value, {
@@ -13,8 +11,8 @@ class cookieHandler {
     });
   }
 
-  static getCookie(req, key) {
-    req.cookie[key];
+  static getCookie(req, res) {
+    return req.cookie;
   }
 }
 module.exports = cookieHandler;

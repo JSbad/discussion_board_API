@@ -15,8 +15,8 @@ const promisePool = pool.promise();
 //Handle SELECT
 async function select(tableName, properties) {
   const queryBuilder = "SELECT " + properties.toString() + " FROM ??";
-  var results = [];
-  var error = [];
+  let results = [];
+  let error = [];
 
   try {
     const [rows, fields] = await promisePool.query(queryBuilder, tableName);
@@ -32,8 +32,8 @@ async function select(tableName, properties) {
 async function selectWhere(tableName, properties, property, value) {
   const queryBuilder =
     "SELECT " + properties.toString() + " FROM ?? WHERE ?? = ?";
-  var results = [];
-  var error = [];
+  let results = [];
+  let error = [];
 
   try {
     const [rows, fields] = await promisePool.query(queryBuilder, [
@@ -53,8 +53,8 @@ async function selectWhere(tableName, properties, property, value) {
 async function insertInto(tableName, properties, values) {
   const queryBuilder =
     "INSERT INTO ?? (" + properties.toString() + ") VALUES ( ? )";
-  var results = [];
-  var error = [];
+  let results = [];
+  let error = [];
 
   try {
     const [rows, fields] = await promisePool.query(queryBuilder, [
@@ -71,11 +71,11 @@ async function insertInto(tableName, properties, values) {
 
 //Handle CREATE TABLE
 async function createTable(tableName, properties) {
-  var queryBuilder = "CREATE TABLE ?? ( `id` INT NOT NULL AUTO_INCREMENT";
+  const queryBuilder = "CREATE TABLE ?? ( `id` INT NOT NULL AUTO_INCREMENT";
   properties.map((v) => (queryBuilder += ", " + v + " VARCHAR(256) NOT NULL"));
   queryBuilder += ", PRIMARY KEY (`id`)) ENGINE = InnoDB;";
-  var results = [];
-  var error = [];
+  let results = [];
+  let error = [];
 
   try {
     const [rows, fields] = await promisePool.query(queryBuilder, tableName);
@@ -89,8 +89,8 @@ async function createTable(tableName, properties) {
 
 //Handle DELETE FROM
 async function deleteFrom(tableName) {
-  var results = [];
-  var error = [];
+  let results = [];
+  let error = [];
 
   try {
     const [rows, fields] = await promisePool.query("DELETE FROM ??", tableName);
@@ -104,8 +104,8 @@ async function deleteFrom(tableName) {
 
 //Handle DROP TABLE
 async function dropTable(tableName) {
-  var results = [];
-  var error = [];
+  let results = [];
+  let error = [];
 
   try {
     const [rows, fields] = await promisePool.query("DROP TABLE ??", tableName);
