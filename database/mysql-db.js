@@ -14,7 +14,7 @@ const promisePool = pool.promise();
 
 //Handle SELECT
 async function select(tableName, properties) {
-  const queryBuilder = "SELECT " + properties.toString() + " FROM ??";
+  let queryBuilder = "SELECT " + properties.toString() + " FROM ??";
   let results = [];
   let error = [];
 
@@ -30,7 +30,7 @@ async function select(tableName, properties) {
 
 //Handle SELECT WHERE
 async function selectWhere(tableName, properties, property, value) {
-  const queryBuilder =
+  let queryBuilder =
     "SELECT " + properties.toString() + " FROM ?? WHERE ?? = ?";
   let results = [];
   let error = [];
@@ -51,7 +51,7 @@ async function selectWhere(tableName, properties, property, value) {
 
 //Handle INSERT INTO
 async function insertInto(tableName, properties, values) {
-  const queryBuilder =
+  let queryBuilder =
     "INSERT INTO ?? (" + properties.toString() + ") VALUES ( ? )";
   let results = [];
   let error = [];
@@ -71,7 +71,7 @@ async function insertInto(tableName, properties, values) {
 
 //Handle CREATE TABLE
 async function createTable(tableName, properties) {
-  const queryBuilder = "CREATE TABLE ?? ( `id` INT NOT NULL AUTO_INCREMENT";
+  let queryBuilder = "CREATE TABLE ?? ( `id` INT NOT NULL AUTO_INCREMENT";
   properties.map((v) => (queryBuilder += ", " + v + " VARCHAR(256) NOT NULL"));
   queryBuilder += ", PRIMARY KEY (`id`)) ENGINE = InnoDB;";
   let results = [];

@@ -3,18 +3,7 @@ const posts = require("./posts.js");
 const comments = require("./comments.js");
 const response = require("../models/response.js");
 const users = require("./users.js");
-const User = require("../models/user.js");
-const cookieHandler = require("../helpers/cookieHandler.js");
-const { v1: uuidv1 } = require("uuid");
 
-routes.use(async function (req, res, next) {
-  if (!cookieHandler.getCookie(req, "userId")) {
-    const userId = uuidv1();
-    cookieHandler.setCookie(res, "userId", userId);
-    const [results, error] = await User.create(userId);
-  }
-  next();
-});
 
 //Handle all /comments requests in comments.js
 routes.use("/comments", comments);

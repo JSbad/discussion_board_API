@@ -72,19 +72,16 @@
   "users": [
     {
       "user_id": "1231232112313",
-      "username": "test",
       "date_updated": "14/12/2021, 14:28:15",
       "date_created": "14/12/2021, 14:28:15"
     },
     {
       "user_id": "1231242343213",
-      "username": "test",
       "date_updated": "14/12/2021, 14:28:15",
       "date_created": "14/12/2021, 14:28:15"
     },
     {
       "user_id": "1231234234213",
-      "username": "test",
       "date_updated": "14/12/2021, 14:28:15",
       "date_created": "14/12/2021, 14:28:15"
     }

@@ -4,7 +4,7 @@ const { v1: uuidv1 } = require("uuid");
 const response = require("../models/response.js");
 const Post = require("../models/post.js");
 const Comment = require("../models/comment.js");
-const cookieHandler = require("../helpers/cookieHandler.js");
+const User = require("../models/user.js");
 
 posts.use(fileUpload());
 
@@ -19,9 +19,9 @@ posts.get("/", async (req, res) => {
 
 //Handle get /posts/example_id
 posts.get("/:id", async (req, res) => {
-  const postId = req.params.id;
-
+  const postId = req.query.id;
   const [results, error] = await Post.getById(postId);
+  
   if (results.length != 0 && error.length == 0)
     res.status(200).json(response.prepare(200, results, error));
   else res.status(404).json(response.prepare(404, results, error));
@@ -29,9 +29,9 @@ posts.get("/:id", async (req, res) => {
 
 //Handle /posts/example_id/comments
 posts.get("/:id/comments", async (req, res) => {
-  const postId = req.params.id;
-
+  const postId = req.query.id;
   const [results, error] = await Comment.getByForeignId(postId);
+  
   if (results.length != 0 && error.length == 0)
     res.status(200).json(response.prepare(200, results, error));
   else res.status(404).json(response.prepare(404, results, error));
@@ -40,20 +40,24 @@ posts.get("/:id/comments", async (req, res) => {
 //Handle creating a post
 posts.post("/", async (req, res) => {
   const postId = uuidv1();
-  const userId = cookieHandler.getCookie(res, "userId");
+  const userId = req.query.userId;
+  let image = req.files.name;
+  let checkUser = await User.getById(userId);
+  if(checkUser.length == 0) {
+    User.create(userId);
+  }
   const dateCreated = new Date().toLocaleString('en-GB');
   const dateUpdated = dateCreated;
   let bodyValues = [];
   let invalid = false;
-  let picUpload;
 
   Post.fillable_properties.map(function (v) {
     if (req.body[v] === null || req.body[v] === undefined)
       invalid = true;
-    bodyValues.push(req.body[v]);
+    else bodyValues.push(req.body[v]);
   });
 
-  bodyValues = [postId, ...bodyValues, userId, dateUpdated, dateCreated];
+  bodyValues = [postId, ...bodyValues, image, userId, dateUpdated, dateCreated];
 
   if (!invalid) {
     const [results, error] = await Post.create(bodyValues);
@@ -62,13 +66,14 @@ posts.post("/", async (req, res) => {
     else
       res.status(400).json(response.prepare(400, results, error));
   } else {
-    res.status(400).json(response.prepare(400, [], [{ "message": "Missing data" }]));
+    res.status(400).json(response.prepare(400, [], [{ "message": "Missing data" }, checkUser, checkUser.length]));
   }
 });
 
 //Handle creating a comment
 posts.post("/:id/comments", async (req, res) => {
-  const postId = req.params.id;
+  const postId = req.query.id;
+  const userId = req.query.userId;
   const commentId = uuidv1();
   const dateCreated = new Date().toLocaleString('en-GB');
   const dateUpdated = dateCreated;
@@ -78,10 +83,10 @@ posts.post("/:id/comments", async (req, res) => {
   Comment.fillable_properties.map(function (v) {
     if (req.body[v] === null || req.body[v] === undefined)
       invalid = true;
-    bodyValues.push(req.body[v]);
+    else bodyValues.push(req.body[v]);
   });
 
-  bodyValues = [commentId, ...bodyValues, postId, dateUpdated, dateCreated];
+  bodyValues = [commentId, userId, ...bodyValues,   postId, dateUpdated, dateCreated];
 
   if (!invalid) {
     const [results, error] = await Comment.create(bodyValues);

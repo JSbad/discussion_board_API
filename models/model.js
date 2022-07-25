@@ -12,13 +12,13 @@ class Model {
         
     }
 
-    //Return all posts
+    //Return all 
     static async getAll() {
         const [results, error] = await database.select(this.tableName, this.public_properties);
         return [results, error];
     }
 
-    //Return posts where property is equal to value
+    //Return where property is equal to value
     static async getBy(property, value) {
         const [results, error] = await database.selectWhere(this.tableName, this.public_properties, property, value);
         return [results, error];
@@ -32,7 +32,7 @@ class Model {
         return await this.getBy(this.foreignIdentifier, value)
     }
 
-    //Create post
+    //Create
     static async create(values) {
         const [results, error] = await database.insertInto(this.tableName, this.public_properties, values);
         return [results, error];

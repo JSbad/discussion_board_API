@@ -9,6 +9,7 @@ app.use(
   })
 );
 
+
 //Handle all routes in routes/index.js
 app.use('/', routes);
 
