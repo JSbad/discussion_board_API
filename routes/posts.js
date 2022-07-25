@@ -19,7 +19,7 @@ posts.get("/", async (req, res) => {
 
 //Handle get /posts/example_id
 posts.get("/:id", async (req, res) => {
-  const postId = req.query.id;
+  const postId = req.params.id;
   const [results, error] = await Post.getById(postId);
   
   if (results.length != 0 && error.length == 0)
@@ -29,7 +29,7 @@ posts.get("/:id", async (req, res) => {
 
 //Handle /posts/example_id/comments
 posts.get("/:id/comments", async (req, res) => {
-  const postId = req.query.id;
+  const postId = req.params.id;
   const [results, error] = await Comment.getByForeignId(postId);
   
   if (results.length != 0 && error.length == 0)
