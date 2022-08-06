@@ -1,12 +1,11 @@
 const posts = require("express").Router();
-const fileUpload = require('express-fileupload');
+const multer = require("multer");
 const { v1: uuidv1 } = require("uuid");
 const response = require("../models/response.js");
 const Post = require("../models/post.js");
 const Comment = require("../models/comment.js");
 const User = require("../models/user.js");
 
-posts.use(fileUpload());
 
 //Handle /posts
 posts.get("/", async (req, res) => {
@@ -38,12 +37,13 @@ posts.get("/:id/comments", async (req, res) => {
 });
 
 //Handle creating a post
-posts.post("/", async (req, res) => {
+const upload = multer({dest: 'images/'}).fields([{name: 'image', maxCount: 0}])
+posts.post("/", upload, async (req, res) => {
   const postId = uuidv1();
   const userId = req.query.userId;
-  let image = req.files.name;
   let checkUser = await User.getById(userId);
-  if(checkUser.length == 0) {
+
+  if(checkUser.length === 0) {
     User.create(userId);
   }
   const dateCreated = new Date().toLocaleString('en-GB');
@@ -51,13 +51,21 @@ posts.post("/", async (req, res) => {
   let bodyValues = [];
   let invalid = false;
 
+  let picUpload;
+  if (req.file === undefined || req.file === null) {
+    picUpload = null;
+  } else {
+    picUpload = req.file.name;
+    picUpload.mv('./images' + picUpload.name);
+  }
+
   Post.fillable_properties.map(function (v) {
     if (req.body[v] === null || req.body[v] === undefined)
       invalid = true;
     else bodyValues.push(req.body[v]);
   });
 
-  bodyValues = [postId, ...bodyValues, image, userId, dateUpdated, dateCreated];
+  bodyValues = [postId, ...bodyValues, userId, dateUpdated, dateCreated];
 
   if (!invalid) {
     const [results, error] = await Post.create(bodyValues);
@@ -66,7 +74,7 @@ posts.post("/", async (req, res) => {
     else
       res.status(400).json(response.prepare(400, results, error));
   } else {
-    res.status(400).json(response.prepare(400, [], [{ "message": "Missing data" }, checkUser, checkUser.length]));
+    res.status(400).json(response.prepare(400, [], [{ "message": "Missing data" }, bodyValues]));
   }
 });
 
