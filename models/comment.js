@@ -5,7 +5,7 @@ class Comment extends Model {
   static identifier = "comment_id";
   static foreignIdentifier = "post_id";
 
-  static fillable_properties = ["author", "content"];
+  static fillable_properties = ["user_id", "content"];
   static public_properties = [
     this.identifier,
     ...this.fillable_properties,

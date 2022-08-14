@@ -80,8 +80,7 @@ posts.post("/", upload, async (req, res) => {
 
 //Handle creating a comment
 posts.post("/:id/comments", async (req, res) => {
-  const postId = req.query.id;
-  const userId = req.query.userId;
+  const postId = req.params.id;
   const commentId = uuidv1();
   const dateCreated = new Date().toLocaleString('en-GB');
   const dateUpdated = dateCreated;
@@ -94,17 +93,17 @@ posts.post("/:id/comments", async (req, res) => {
     else bodyValues.push(req.body[v]);
   });
 
-  bodyValues = [commentId, userId, ...bodyValues,   postId, dateUpdated, dateCreated];
+  bodyValues = [commentId,  ...bodyValues,   postId, dateUpdated, dateCreated];
 
   if (!invalid) {
     const [results, error] = await Comment.create(bodyValues);
     if (error.length == 0 && results.affectedRows == 1)
-      res.status(201).json(response.prepare(201, results, error));
+      res.status(201).json(response.prepare(201, [req.body], error));
     else
       res.status(400).json(response.prepare(400, results, error));
 
   } else {
-    res.status(400).json(response.prepare(400, [], [{ "message": "Missing data" }]));
+    res.status(400).json(response.prepare(400, [req.body], [{ "message": "Missing data" }]));
   }
 });
 
