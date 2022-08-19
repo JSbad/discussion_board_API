@@ -9,6 +9,8 @@ app.use(cors());
 //Enable body parsing
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+app.use(express.static(__dirname+'/public'));
+app.use('/images', express.static(__dirname+'/images'));
 
 //Handle all routes in routes/index.js
 app.use('/', routes);

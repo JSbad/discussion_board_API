@@ -37,8 +37,17 @@ posts.get("/:id/comments", async (req, res) => {
 });
 
 //Handle creating a post
-const upload = multer({dest: 'images/'}).fields([{name: 'image', maxCount: 0}])
-posts.post("/", upload, async (req, res) => {
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null,'images/')
+},
+  filename: (req,file,cb) => {
+    cb(null, file.originalname)
+}
+})
+
+const upload = multer({storage: storage,limits:{fileSize: 10000000}})
+posts.post("/", upload.single('image'), async (req, res) => {
   const postId = uuidv1();
   const userId = req.query.userId;
   let checkUser = await User.getById(userId);
@@ -50,15 +59,9 @@ posts.post("/", upload, async (req, res) => {
   const dateUpdated = dateCreated;
   let bodyValues = [];
   let invalid = false;
-
-  let picUpload;
-  if (req.file === undefined || req.file === null) {
-    picUpload = null;
-  } else {
-    picUpload = req.file.name;
-    picUpload.mv('./images' + picUpload.name);
-  }
-
+console.log(process.cwd())
+console.log(req.body)
+console.log(req.file)
   Post.fillable_properties.map(function (v) {
     if (req.body[v] === null || req.body[v] === undefined)
       invalid = true;
